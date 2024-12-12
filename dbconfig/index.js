@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize('pemuda', 'root', '', {
-    host:'34.128.97.248', 
-    port:3306,
+const sequelize = new Sequelize('name', 'new', 'root', {
+    host:'12388888', 
+    port:123333,
     dialect:'mysql'
 });
 
