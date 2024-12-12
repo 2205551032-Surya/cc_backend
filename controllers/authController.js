@@ -1,7 +1,4 @@
 const User = require('../models/userModel');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const { secretKey } = require('../middlewares/authMiddleware');
 
 // Login Controller
 const login = async (request, h) => {
@@ -14,16 +11,12 @@ const login = async (request, h) => {
       return h.response({ message: 'User not found' }).code(404);
     }
 
-    const isPasswordValid = await bcrypt.compare(password, userData.password);
-    if (!isPasswordValid) {
+    if (password !== userData.password) {
       return h.response({ message: 'Invalid password' }).code(401);
     }
 
-    const token = jwt.sign({ userId: userData.id_user }, secretKey, { expiresIn: '1h' });
-
     return h.response({
       message: 'Login successful',
-      token,
     }).code(200);
   } catch (error) {
     console.error(error);
@@ -45,12 +38,9 @@ const register = async (request, h) => {
       return h.response({ message: 'Email already registered' }).code(400);
     }
 
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-
     const newUser = await User.create({
       email,
-      password: hashedPassword,
+      password, // Password disimpan langsung tanpa hash (Tidak direkomendasikan)
     });
 
     return h.response({
@@ -63,5 +53,4 @@ const register = async (request, h) => {
   }
 };
 
-
-module.exports = { login, register};
+module.exports = { login, register };
